@@ -1,35 +1,423 @@
-# Documentation: https://rmk.rs/docs/configuration.html
+# keyboard.toml — RMK configuration for Charybdis Mini Wireless
+# Converted from ZMK (Nice Nano v2, BLE split, PMW3610 trackball on right half)
+#
+# ┌─────────────────────────────────────────────────────────────────────────┐
+# │ IMPORTANT NOTES                                                         │
+# │                                                                         │
+# │ 1. PIN ASSIGNMENTS — derived from ZMK's nice_nano arduino_pro_micro     │
+# │    mapping (app/module/boards/nicekeyboards/nice_nano/                  │
+# │    arduino_pro_micro_pins.dtsi). Verify against your board if in doubt. │
+# │                                                                         │
+# │ 2. BT PROFILE KEYS — User0–User4 map to BT profiles 0–4 only when      │
+# │    Vial is enabled and vial.json defines them as custom keycodes.       │
+# │    Without Vial, they are "user key 0–4" (configurable in host OS).    │
+# │    ClearEeprom is the closest equivalent to ZMK's bt BT_CLR.           │
+# │                                                                         │
+# │ 3. TD_SUPER SIMPLIFICATION — ZMK had a tap-dance on the left thumb:     │
+# │      1 tap  → LGui                                                      │
+# │      2 taps → MO(5) — SUPER layer momentary                            │
+# │      3 taps → MO(4) — SCROLL layer momentary                           │
+# │    RMK TOML tap-dance (TD/Morse) requires Rust-side sequence config.   │
+# │    Simplified here to LT(5, LGui):  tap = LGui,  hold = SUPER layer.   │
+# │    The SCROLL layer (4) stays reachable via the outer-column MO(4) keys.│
+# │                                                                         │
+# │ 4. PMW3610 SCROLL — ZMK used scroll-layers = <4> to activate scroll     │
+# │    mode when layer 4 is active. RMK's PointingProcessorConfig only      │
+# │    exposes invert/swap axis options; layer-based scroll switching is     │
+# │    not available in TOML and requires a custom Rust processor.           │
+# │    All other sensor options (cpi, smart_mode, report_hz, etc.) are      │
+# │    fully configurable here via [[input_device.pmw3610]].                │
+# └─────────────────────────────────────────────────────────────────────────┘
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Keyboard identity
+# ═══════════════════════════════════════════════════════════════════════════
+
 [keyboard]
-name = "RMK Keyboard"
-product_name = "RMK Keyboard"
-vendor_id = 0x4c4b
-product_id = 0x4643
-manufacturer = "RMK"
-chip = "rp2040"
+name         = "Charybdis Mini Wireless"
+vendor_id    = 0x4c4b
+product_id   = 0x6060
+manufacturer = "Custom"
+chip         = "nrf52840"
 
-[matrix]
-# Row and col pins are mandatory
-row_pins = ["PIN_6", "PIN_7", "PIN_8", "PIN_9"]
-col_pins = ["PIN_19", "PIN_20", "PIN_21"]
+# ═══════════════════════════════════════════════════════════════════════════
+# BLE / wireless
+# ═══════════════════════════════════════════════════════════════════════════
 
-# RMK uses col2row as the default matrix diode direction, if you want to use a row2col matrix, add `row2col = true`
-# row2col = true
+[ble]
+enabled = true
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Layout
+#
+# The keyboard has 4 rows × 12 logical columns (split: 6L + 6R).
+# Row 3 is the thumb cluster (3 keys left, 2 keys right = 5 total).
+#
+# Key position order in every [[layer]] keys string:
+#
+#   Row 0  (0,0,L)…(0,5,L)   (0,11,R)…(0,6,R)  — 12 keys
+#   Row 1  (1,0,L)…(1,5,L)   (1,11,R)…(1,6,R)  — 12 keys
+#   Row 2  (2,0,L)…(2,5,L)   (2,11,R)…(2,6,R)  — 12 keys
+#   Row 3  (3,3,L) (3,4,L) (3,1,L)   (3,7,R) (3,9,R)  — 5 keys
+#   ──────────────────────────────────────────────────
+#   Total 41 keys per layer
+#
+# The right half is wired in reverse column order, matching the ZMK transform:
+#   RC(r,11) RC(r,10) RC(r,9) RC(r,8) RC(r,7) RC(r,6)
+# i.e. physical right cols 5→0 appear as the logical right columns.
+# ═══════════════════════════════════════════════════════════════════════════
 
 [layout]
-rows = 4
-cols = 3
-layers = 2
-keymap = [
-    [
-        ["A", "B", "C"],
-        ["Kc1", "Kc2", "Kc3"],
-        ["LCtrl", "MO(1)", "LShift"],
-        ["OSL(1)", "LT(2, Kc9)", "LM(1, LShift | LGui)"]
-    ],
-    [
-        ["_", "TT(1)", "TG(2)"],
-        ["_", "_", "_"],
-        ["_", "_", "_"],
-        ["_", "_", "_"]
-    ],
+rows   = 4
+cols   = 12
+layers = 9
+matrix_map = """
+(0,0,L)  (0,1,L)  (0,2,L)  (0,3,L)  (0,4,L)  (0,5,L)   (0,11,R) (0,10,R) (0,9,R)  (0,8,R)  (0,7,R)  (0,6,R)
+(1,0,L)  (1,1,L)  (1,2,L)  (1,3,L)  (1,4,L)  (1,5,L)   (1,11,R) (1,10,R) (1,9,R)  (1,8,R)  (1,7,R)  (1,6,R)
+(2,0,L)  (2,1,L)  (2,2,L)  (2,3,L)  (2,4,L)  (2,5,L)   (2,11,R) (2,10,R) (2,9,R)  (2,8,R)  (2,7,R)  (2,6,R)
+                             (3,3,L)  (3,4,L)  (3,1,L)   (3,7,R)  (3,9,R)
+"""
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Split keyboard — BLE, Nice Nano v2 on both halves
+#
+# pro_micro pin → nRF52840 GPIO (from arduino_pro_micro_pins.dtsi):
+#   pm4  = P0.22    pm5  = P0.24    pm6  = P1.00    pm7  = P0.11
+#   pm8  = P1.04    pm9  = P1.06    pm10 = P0.09    pm16 = P0.10
+#   pm14 = P1.11    pm15 = P1.13    pm18 = P1.15    pm19 = P0.02
+#   pm20 = P0.29    pm21 = P0.31
+#
+# Matrix pins (row2col diode direction, same pins on both halves):
+#   Row pins (pm18, pm5, pm4, pm9)         → P1_15, P0_24, P0_22, P1_06
+#   Col pins (pm19, pm20, pm10, pm6, pm7, pm8) → P0_02, P0_29, P0_09, P1_00, P0_11, P1_04
+# ═══════════════════════════════════════════════════════════════════════════
+
+[split]
+connection = "ble"
+
+[split.central]
+rows       = 4
+cols       = 6
+row_offset = 0
+col_offset = 0
+
+[split.central.matrix]
+matrix_type = "normal"
+row_pins    = ["P1_15", "P0_24", "P0_22", "P1_06"]
+col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
+
+[[split.peripheral]]
+rows       = 4
+cols       = 6
+row_offset = 0
+col_offset = 6
+
+[split.peripheral.matrix]
+matrix_type = "normal"
+row_pins    = ["P1_15", "P0_24", "P0_22", "P1_06"]
+col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PMW3610 trackball (right / peripheral half)
+#
+# From charybdis_right.overlay:
+#   SCK  = NRF_PSEL(SPIM_SCK,  1, 13) → P1_13  (pm15)
+#   MOSI = NRF_PSEL(SPIM_MOSI, 0, 10) → P0_10  (pm16)  — half-duplex SDIO
+#   MISO = same pin as MOSI            → P0_10  (spi.mosi == spi.miso required)
+#   CS   = &gpio0 pin 20               → P0_20  (pm3 / D3)
+#   IRQ  = &gpio1 pin 11               → P1_11  (pm14)
+#
+# Available Pmw3610Config fields (rmk-config/src/lib.rs):
+#   spi.{sck, mosi, miso, cs}   — pin names
+#   motion                       — interrupt pin (optional; omit = polling)
+#   cpi                          — 200–3200 in steps of 200
+#   invert_x / invert_y          — hardware-level axis inversion
+#   swap_xy                      — hardware-level axis swap
+#   force_awake                  — disable power-save REST modes
+#   smart_mode                   — better tracking on reflective surfaces
+#   report_hz                    — motion report rate (Hz)
+#   proc_invert_x / proc_invert_y — processor-level axis inversion
+#   proc_swap_xy                 — processor-level axis swap
+#
+# Scroll layer (ZMK scroll-layers = <4>) is NOT configurable via TOML.
+# See NOTE 4 above for the Rust workaround.
+# ═══════════════════════════════════════════════════════════════════════════
+
+[[input_device.pmw3610]]
+name        = "trackball"
+spi.sck     = "P1_13"
+spi.mosi    = "P0_10"
+spi.miso    = "P0_10"   # must equal spi.mosi for half-duplex SDIO
+spi.cs      = "P0_20"
+motion      = "P1_11"
+cpi         = 600
+smart_mode  = true
+report_hz   = 100
+# invert_x  = false    # flip if cursor moves opposite to trackball
+# invert_y  = false
+# swap_xy   = false    # rotate 90° if axes are transposed on your build
+# proc_invert_x = false
+# proc_invert_y = false
+# proc_swap_xy  = false
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Behaviors
+# ═══════════════════════════════════════════════════════════════════════════
+
+[behavior.morse.profiles]
+# tp200: matches ZMK u_mt / u_lt  (flavor = "tap-preferred", tapping_term_ms = 200)
+tp200 = { hold_timeout = "200ms", gap_timeout = "200ms" }
+
+[behavior.combo]
+timeout = "50ms"
+combos = [
+  # ZMK letterh:   key-positions <32 33> = Comma + Dot   → [ (layer 0 only)
+  { actions = ["Comma", "Dot"],  output = "LeftBracket",  layer = 0 },
+  # ZMK lettersign: key-positions <31 32> = M     + Comma → ] (layer 0 only)
+  { actions = ["M", "Comma"],    output = "RightBracket", layer = 0 },
 ]
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Aliases
+# ═══════════════════════════════════════════════════════════════════════════
+
+[aliases]
+
+# ── Hyper = LCtrl | LShift | LAlt | LGui ────────────────────────────────────
+# Used in the SUPER layer and in NAV row 2.
+# Shifted ZMK keycodes (!, $, %, ^, &, *, ?, +, _) carry an implicit Shift;
+# because LShift is already in the modifier set the physical key sent is
+# the base key (1, 4, 5, 6, 7, 8, /, =, -) with all four hyper mods held.
+
+h1     = "WM(Kc1,        LCtrl | LShift | LAlt | LGui)"  # Hyper+1  (→ Hyper+!)
+h4     = "WM(Kc4,        LCtrl | LShift | LAlt | LGui)"  # Hyper+4  (→ Hyper+$)
+h5     = "WM(Kc5,        LCtrl | LShift | LAlt | LGui)"  # Hyper+5  (→ Hyper+%)
+h6     = "WM(Kc6,        LCtrl | LShift | LAlt | LGui)"  # Hyper+6  (→ Hyper+^)
+h7     = "WM(Kc7,        LCtrl | LShift | LAlt | LGui)"  # Hyper+7  (→ Hyper+&)
+h8     = "WM(Kc8,        LCtrl | LShift | LAlt | LGui)"  # Hyper+8  (→ Hyper+*)
+hLbr   = "WM(LeftBracket, LCtrl | LShift | LAlt | LGui)" # Hyper+[
+hRbr   = "WM(RightBracket,LCtrl | LShift | LAlt | LGui)" # Hyper+]
+hGrv   = "WM(Grave,       LCtrl | LShift | LAlt | LGui)" # Hyper+`
+hA     = "WM(A,           LCtrl | LShift | LAlt | LGui)"
+hB     = "WM(B,           LCtrl | LShift | LAlt | LGui)"
+hC     = "WM(C,           LCtrl | LShift | LAlt | LGui)"
+hD     = "WM(D,           LCtrl | LShift | LAlt | LGui)"
+hE     = "WM(E,           LCtrl | LShift | LAlt | LGui)"
+hF     = "WM(F,           LCtrl | LShift | LAlt | LGui)"
+hG     = "WM(G,           LCtrl | LShift | LAlt | LGui)"
+hH     = "WM(H,           LCtrl | LShift | LAlt | LGui)"
+hI     = "WM(I,           LCtrl | LShift | LAlt | LGui)"
+hJ     = "WM(J,           LCtrl | LShift | LAlt | LGui)"
+hK     = "WM(K,           LCtrl | LShift | LAlt | LGui)"
+hL     = "WM(L,           LCtrl | LShift | LAlt | LGui)"
+hM     = "WM(M,           LCtrl | LShift | LAlt | LGui)"
+hN     = "WM(N,           LCtrl | LShift | LAlt | LGui)"
+hO     = "WM(O,           LCtrl | LShift | LAlt | LGui)"
+hP     = "WM(P,           LCtrl | LShift | LAlt | LGui)"
+hR     = "WM(R,           LCtrl | LShift | LAlt | LGui)"
+hS     = "WM(S,           LCtrl | LShift | LAlt | LGui)"
+hT     = "WM(T,           LCtrl | LShift | LAlt | LGui)"
+hU     = "WM(U,           LCtrl | LShift | LAlt | LGui)"
+hV     = "WM(V,           LCtrl | LShift | LAlt | LGui)"
+hW     = "WM(W,           LCtrl | LShift | LAlt | LGui)"
+hX     = "WM(X,           LCtrl | LShift | LAlt | LGui)"
+hY     = "WM(Y,           LCtrl | LShift | LAlt | LGui)"
+hZ     = "WM(Z,           LCtrl | LShift | LAlt | LGui)"
+hComma = "WM(Comma,       LCtrl | LShift | LAlt | LGui)"
+hDot   = "WM(Dot,         LCtrl | LShift | LAlt | LGui)"
+hSlash = "WM(Slash,       LCtrl | LShift | LAlt | LGui)"  # Hyper+/ (→ Hyper+? with shift in mods)
+hSemi  = "WM(Semicolon,   LCtrl | LShift | LAlt | LGui)"
+hEql   = "WM(Equal,       LCtrl | LShift | LAlt | LGui)"  # Hyper+= (→ Hyper++ with shift in mods)
+hMins  = "WM(Minus,       LCtrl | LShift | LAlt | LGui)"  # Hyper+- (→ Hyper+_ with shift in mods)
+
+# ── LAlt combinations (SYMNUM layer) ────────────────────────────────────────
+aT   = "WM(T,   LAlt)"
+aZ   = "WM(Z,   LAlt)"
+aQ   = "WM(Q,   LAlt)"
+aD   = "WM(D,   LAlt)"
+aW   = "WM(W,   LAlt)"
+aX   = "WM(X,   LAlt)"
+aY   = "WM(Y,   LAlt)"
+aI   = "WM(I,   LAlt)"
+aO   = "WM(O,   LAlt)"
+aH   = "WM(H,   LAlt)"
+aJ   = "WM(J,   LAlt)"
+aK   = "WM(K,   LAlt)"
+aA   = "WM(A,   LAlt)"
+aS   = "WM(S,   LAlt)"
+aF   = "WM(F,   LAlt)"
+aM   = "WM(M,   LAlt)"
+aC   = "WM(C,   LAlt)"
+aV   = "WM(V,   LAlt)"
+aN   = "WM(N,   LAlt)"
+aN1  = "WM(Kc1, LAlt)"
+aN2  = "WM(Kc2, LAlt)"
+aN3  = "WM(Kc3, LAlt)"
+aN4  = "WM(Kc4, LAlt)"
+aN5  = "WM(Kc5, LAlt)"
+aN6  = "WM(Kc6, LAlt)"
+
+# ── Misc shortcuts ───────────────────────────────────────────────────────────
+lctab = "WM(Tab, LCtrl)"   # Ctrl+Tab  (NAV layer)
+lacv  = "WM(V,   LAlt)"    # Alt+V     (NAV layer — same as @aV, kept for clarity)
+lacc  = "WM(C,   LAlt)"    # Alt+C     (NAV layer — same as @aC)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# Layers  (41 keys each, order = matrix_map row by row)
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 0 — BASE
+# Home-row mods (HRM) via MT(), SCROLL layer on outer columns via MO(4).
+# Left thumb: LT(5,LGui) → tap = LGui, hold = SUPER layer (simplified td_super)
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "BASE"
+keys = """
+Escape           Q                W                E                R                T
+Y                U                I                O                P                Backspace
+Tab              MT(A,LGui,tp200) MT(S,LAlt,tp200) MT(D,LCtrl,tp200) MT(F,LShift,tp200) G
+H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+MO(4)            Z                X                C                V                B
+N                M                Comma            Dot              Slash            MO(4)
+LT(5,LGui)       Space            MO(1)            MO(2)            Enter
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 1 — NAV
+# Left:  arrow cluster, home/end, mouse buttons, Ctrl+Tab
+#         Row 2 = Hyper+symbol shortcuts (^  &  *  [  ]  `)
+# Right: numpad-style number row + operators, Kp0–Kp3 on row 2
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "NAV"
+keys = """
+_                Home             MouseBtn2        Up               MouseBtn1        End
+KpMinus          Kc7              Kc8              Kc9              KpSlash          Backspace
+@lctab           _                Left             Down             Right            CapsLock
+KpPlus           Kc4              Kc5              Kc6              KpAsterisk       @lacc
+@h6              @h7              @h8              @hLbr            @hRbr            @hGrv
+Kc0              Kc1              Kc2              Kc3              KpEqual          @lacv
+_                _                _                MO(3)            _
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 2 — SYMNUM
+# Alt-key sequences (macOS / DE layout shortcuts) + shifted symbols.
+# SHIFTED(Kc5) = %, SHIFTED(Kc9) = (, SHIFTED(Kc0) = ), SHIFTED(Kc1) = !,
+# SHIFTED(Minus) = _
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "SYMNUM"
+keys = """
+@aT              @aZ              @aQ              @aD              @aW              @aX
+@aY              @aI              Backslash        @aO              No               Delete
+SHIFTED(Kc5)     @aN1             SHIFTED(Kc9)     KpEqual          SHIFTED(Kc0)     @aN5
+@aH              @aN6             @aJ              @aK              SHIFTED(Kc1)     No
+@aN3             @aN2             @aA              SHIFTED(Minus)   @aS              @aN4
+@aF              @aM              @aC              @aV              @aN              No
+_                _                MO(3)            _                _
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 3 — FUN
+# Bluetooth profiles, output selection, bootloader.
+# User0–User4 = BT profile 0–4 (Vial custom keycodes — see NOTE 2).
+# ClearEeprom  ≈ bt BT_CLR  (clears stored BT bonds / EEPROM).
+# OutputBluetooth ≈ out OUT_TOG  (force BLE output; use OutputUsb to revert).
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "FUN"
+keys = """
+_                _                _                _                _                SystemPower
+User0            User1            User2            User3            User4            ClearEeprom
+_                _                _                _                _                _
+OutputBluetooth  _                _                _                _                _
+Bootloader       _                _                _                _                _
+_                _                _                _                _                Bootloader
+_                _                _                _                _
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 4 — SCROLL
+# F-keys, media controls, mouse buttons.
+# TO(6) switches exclusively to the GAME layer.
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "SCROLL"
+keys = """
+F1               F2               F3               F4               F5               F6
+F7               F8               F9               F10              F11              F12
+TO(6)            _                _                _                _                _
+_                _                _                _                MediaPlayPause   AudioVolUp
+_                _                _                _                _                _
+_                MouseBtn1        MouseBtn2        _                AudioMute        AudioVolDown
+_                _                _                _                _
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 5 — SUPER
+# Every key sends Ctrl+Shift+Alt+GUI (Hyper) + the base key.
+# Shifted symbols (!, $, %, ?, +, _) have LShift in the modifier set,
+# so only the base physical key is listed (1, 4, 5, /, =, -).
+# The two @hSlash / @hMins entries on row 2 are intentionally identical
+# (QUESTION≡SLASH and UNDERSCORE≡MINUS once hyper mods are applied).
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "SUPER"
+keys = """
+@h1              @h4              @hW              @hE              @hR              @hT
+@hY              @hU              @hI              @hO              @hP              @hSlash
+@h5              @hA              @hS              @hD              @hF              @hG
+@hH              @hJ              @hK              @hL              @hSemi           @hEql
+@hMins           @hZ              @hX              @hC              @hV              @hB
+@hN              @hM              @hComma          @hDot            @hSlash          @hMins
+_                _                _                _                _
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 6 — GAME
+# No home-row mods on the left hand; dedicated LShift on row 1 col 1.
+# TO(0) returns to BASE.
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "GAME"
+keys = """
+Escape           T                Q                W                E                R
+Y                U                I                O                P                TO(0)
+Tab              LShift           A                S                D                F
+H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+Z                B                X                C                V                B
+N                M                Comma            Dot              Slash            MO(4)
+MO(8)            Space            MO(7)            MO(2)            Enter
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 7 — GAMEADD  (extra number/letter overlay for gaming)
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "GAMEADD"
+keys = """
+P                Kc1              Kc7              _                Kc8              Kc4
+Y                U                I                O                P                TO(0)
+M                Kc2              _                _                _                Kc5
+H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+N                Kc3              Kc0              I                Kc9              Kc6
+N                M                Comma            Dot              Slash            MO(4)
+_                _                _                MO(2)            Enter
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 8 — GAMEADD2  (F-key + letter overlay for gaming)
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "GAMEADD2"
+keys = """
+F1               Y                U                I                O                P
+Y                U                I                O                P                TO(0)
+F2               H                J                L                Semicolon        Quote
+H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+F3               N                M                Comma            Dot              Slash
+N                M                Comma            Dot              Slash            MO(4)
+_                _                _                MO(2)            Enter
+"""
