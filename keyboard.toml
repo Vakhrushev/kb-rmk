@@ -176,7 +176,7 @@ morses = [
 
 [behavior.morse.profiles]
 # tp200: matches ZMK u_mt / u_lt  (flavor = "tap-preferred", tapping_term_ms = 200)
-tp200 = { hold_timeout = "200ms", gap_timeout = "200ms" }
+tp200 = { hold_timeout = "200ms", gap_timeout = "200ms", enable_flow_tap = true }
 
 [behavior.combo]
 timeout = "50ms"
@@ -290,7 +290,7 @@ Tab              MT(A,LGui,tp200) MT(S,LAlt,tp200) MT(D,LCtrl,tp200) MT(F,LShift
 H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
 MO(4)            Z                X                C                V                B
 N                M                Comma            Dot              Slash            MO(4)
-LGui             Space            MO(1)            MO(2)            Enter
+TD(0)            Space            MO(1)            MO(2)            Enter
 """
 
 # ───────────────────────────────────────────────────────────────────────────
