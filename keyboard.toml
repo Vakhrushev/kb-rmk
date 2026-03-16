@@ -167,8 +167,7 @@ interface = { Spi = { instance = "SPIM0", sck = "P1_13", mosi = "P0_10", miso = 
 # Behaviors
 # ═══════════════════════════════════════════════════════════════════════════
 
-
-# TD(0) — left thumb: 1 tap = LGui, 2 taps = SUPER layer, hold = SUPER layer
+[behavior.morse]
 # Replaces ZMK td_super tap-dance (original: 1t=LGui, 2t=MO(5), 3t=MO(4))
 morses = [
   { tap = "LGui", hold = "LGui", double_tap = "MO(5)", hold_after_tap = "LGui" },
