@@ -1,2 +1,4 @@
 .claude
 build
+.DS_Store
+*.uf2
