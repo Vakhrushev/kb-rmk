@@ -123,42 +123,43 @@ col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
 # From charybdis_right.overlay:
 #   SCK  = NRF_PSEL(SPIM_SCK,  1, 13) → P1_13  (pm15)
 #   MOSI = NRF_PSEL(SPIM_MOSI, 0, 10) → P0_10  (pm16)  — half-duplex SDIO
-#   MISO = same pin as MOSI            → P0_10  (spi.mosi == spi.miso required)
+#   MISO = same pin as MOSI            → P0_10
 #   CS   = &gpio0 pin 20               → P0_20  (pm3 / D3)
 #   IRQ  = &gpio1 pin 11               → P1_11  (pm14)
 #
-# Available Pmw3610Config fields (rmk-config/src/lib.rs):
-#   spi.{sck, mosi, miso, cs}   — pin names
-#   motion                       — interrupt pin (optional; omit = polling)
-#   cpi                          — 200–3200 in steps of 200
-#   invert_x / invert_y          — hardware-level axis inversion
-#   swap_xy                      — hardware-level axis swap
-#   force_awake                  — disable power-save REST modes
-#   smart_mode                   — better tracking on reflective surfaces
-#   report_hz                    — motion report rate (Hz)
-#   proc_invert_x / proc_invert_y — processor-level axis inversion
-#   proc_swap_xy                 — processor-level axis swap
+# ⚠ rmk-config VERSION NOTE:
+#   [[input_device.pmw3610]] requires rmk-config >= 0.6.1.
+#   The rmkit 0.0.21 pre-built binary shipped with rmk-config 0.6.0 (published
+#   2 days before 0.6.1). Until a new rmkit binary is released, use the
+#   generic [[input_device.pointing]] form below (parseable by 0.6.0).
 #
-# Scroll layer (ZMK scroll-layers = <4>) is NOT configurable via TOML.
-# See NOTE 4 above for the Rust workaround.
+#   When rmkit is updated to a binary compiled against rmk-config >= 0.6.1,
+#   replace this entire section with:
+#
+#   [[input_device.pmw3610]]
+#   name        = "trackball"
+#   spi.sck     = "P1_13"
+#   spi.mosi    = "P0_10"
+#   spi.miso    = "P0_10"
+#   spi.cs      = "P0_20"
+#   motion      = "P1_11"
+#   cpi         = 600
+#   smart_mode  = true
+#   report_hz   = 100
+#   # invert_x  = false
+#   # invert_y  = false
+#   # swap_xy   = false
+#   # proc_invert_x = false
+#   # proc_invert_y = false
+#   # proc_swap_xy  = false
+#
+# Scroll layer (ZMK scroll-layers = <4>) is NOT configurable via TOML in
+# either version — see NOTE 4 above.
 # ═══════════════════════════════════════════════════════════════════════════
 
-[[input_device.pmw3610]]
-name        = "trackball"
-spi.sck     = "P1_13"
-spi.mosi    = "P0_10"
-spi.miso    = "P0_10"   # must equal spi.mosi for half-duplex SDIO
-spi.cs      = "P0_20"
-motion      = "P1_11"
-cpi         = 600
-smart_mode  = true
-report_hz   = 100
-# invert_x  = false    # flip if cursor moves opposite to trackball
-# invert_y  = false
-# swap_xy   = false    # rotate 90° if axes are transposed on your build
-# proc_invert_x = false
-# proc_invert_y = false
-# proc_swap_xy  = false
+# rmk-config 0.6.0-compatible form (generic pointing device via SPI):
+[[input_device.pointing]]
+interface = { Spi = { instance = "SPIM0", sck = "P1_13", mosi = "P0_10", miso = "P0_10", cs = "P0_20", cpi = 600 } }
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Behaviors
