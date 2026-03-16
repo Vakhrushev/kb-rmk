@@ -167,16 +167,16 @@ interface = { Spi = { instance = "SPIM0", sck = "P1_13", mosi = "P0_10", miso = 
 # Behaviors
 # ═══════════════════════════════════════════════════════════════════════════
 
-[behavior.morse]
+
 # TD(0) — left thumb: 1 tap = LGui, 2 taps = SUPER layer, hold = SUPER layer
 # Replaces ZMK td_super tap-dance (original: 1t=LGui, 2t=MO(5), 3t=MO(4))
 morses = [
-  { tap = "LGui", hold = "LGui", double_tap = "MO(5)", hold_after_tap = "MO(5)" },
+  { tap = "LGui", hold = "LGui", double_tap = "MO(5)", hold_after_tap = "LGui" },
 ]
 
 [behavior.morse.profiles]
 # tp200: matches ZMK u_mt / u_lt  (flavor = "tap-preferred", tapping_term_ms = 200)
-tp200 = { hold_timeout = "200ms", gap_timeout = "200ms", enable_flow_tap = true }
+tp200 = {enable_flow_tap = true, prior_idle_time = "120ms", hold_on_other_press = true, hold_timeout = "250ms", gap_timeout = "250ms" }
 
 [behavior.combo]
 timeout = "50ms"
