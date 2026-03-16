@@ -34,11 +34,11 @@
 # ═══════════════════════════════════════════════════════════════════════════
 
 [keyboard]
-name         = "Charybdis Mini Wireless"
-vendor_id    = 0x4c4b
-product_id   = 0x6060
+name = "Charybdis Mini Wireless"
+vendor_id = 0x4c4b
+product_id = 0x6060
 manufacturer = "Custom"
-chip         = "nrf52840"
+chip = "nrf52840"
 
 # ═══════════════════════════════════════════════════════════════════════════
 # BLE / wireless
@@ -68,8 +68,8 @@ enabled = true
 # ═══════════════════════════════════════════════════════════════════════════
 
 [layout]
-rows   = 4
-cols   = 12
+rows = 4
+cols = 12
 layers = 9
 matrix_map = """
 (0,0,L)  (0,1,L)  (0,2,L)  (0,3,L)  (0,4,L)  (0,5,L)   (0,11,R) (0,10,R) (0,9,R)  (0,8,R)  (0,7,R)  (0,6,R)
@@ -96,28 +96,28 @@ matrix_map = """
 connection = "ble"
 
 [split.central]
-rows       = 4
-cols       = 6
+rows = 4
+cols = 6
 row_offset = 0
 col_offset = 0
 
 [split.central.matrix]
 matrix_type = "normal"
-row_pins    = ["P1_15", "P0_24", "P0_22", "P1_06"]
-col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
-row2col     = true
+row_pins = ["P1_15", "P0_24", "P0_22", "P1_06"]
+col_pins = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
+row2col = true
 
 [[split.peripheral]]
-rows       = 4
-cols       = 6
+rows = 4
+cols = 6
 row_offset = 0
 col_offset = 6
 
 [split.peripheral.matrix]
 matrix_type = "normal"
-row_pins    = ["P1_15", "P0_24", "P0_22", "P1_06"]
-col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
-row2col     = true
+row_pins = ["P1_15", "P0_24", "P0_22", "P1_06"]
+col_pins = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
+row2col = true
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PMW3610 trackball (right / peripheral half)
@@ -167,23 +167,19 @@ interface = { Spi = { instance = "SPIM0", sck = "P1_13", mosi = "P0_10", miso = 
 # Behaviors
 # ═══════════════════════════════════════════════════════════════════════════
 
-[behavior.morse]
-# Replaces ZMK td_super tap-dance (original: 1t=LGui, 2t=MO(5), 3t=MO(4))
-morses = [
-  { tap = "LGui", hold = "LGui", double_tap = "MO(5)", hold_after_tap = "LGui" },
-]
 
-[behavior.morse.profiles]
-# tp200: matches ZMK u_mt / u_lt  (flavor = "tap-preferred", tapping_term_ms = 200)
-tp200 = {enable_flow_tap = true, prior_idle_time = "120ms", hold_on_other_press = true, hold_timeout = "250ms", gap_timeout = "250ms" }
+[behavior.morse]
+permissive_hold = true
+prior_idle_time = "60ms"
+hold_timeout = "250ms"
 
 [behavior.combo]
 timeout = "50ms"
 combos = [
-  # ZMK letterh:   key-positions <32 33> = Comma + Dot   → [ (layer 0 only)
-  { actions = ["Comma", "Dot"],  output = "LeftBracket",  layer = 0 },
-  # ZMK lettersign: key-positions <31 32> = M     + Comma → ] (layer 0 only)
-  { actions = ["M", "Comma"],    output = "RightBracket", layer = 0 },
+    # ZMK letterh:   key-positions <32 33> = Comma + Dot   → [ (layer 0 only)
+    { actions = ["Comma", "Dot"], output = "LeftBracket", layer = 0 },
+    # ZMK lettersign: key-positions <31 32> = M     + Comma → ] (layer 0 only)
+    { actions = ["M", "Comma"], output = "RightBracket", layer = 0 },
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -198,78 +194,78 @@ combos = [
 # because LShift is already in the modifier set the physical key sent is
 # the base key (1, 4, 5, 6, 7, 8, /, =, -) with all four hyper mods held.
 
-h1     = "WM(Kc1,        LCtrl | LShift | LAlt | LGui)"  # Hyper+1  (→ Hyper+!)
-h4     = "WM(Kc4,        LCtrl | LShift | LAlt | LGui)"  # Hyper+4  (→ Hyper+$)
-h5     = "WM(Kc5,        LCtrl | LShift | LAlt | LGui)"  # Hyper+5  (→ Hyper+%)
-h6     = "WM(Kc6,        LCtrl | LShift | LAlt | LGui)"  # Hyper+6  (→ Hyper+^)
-h7     = "WM(Kc7,        LCtrl | LShift | LAlt | LGui)"  # Hyper+7  (→ Hyper+&)
-h8     = "WM(Kc8,        LCtrl | LShift | LAlt | LGui)"  # Hyper+8  (→ Hyper+*)
-hLbr   = "WM(LeftBracket, LCtrl | LShift | LAlt | LGui)" # Hyper+[
-hRbr   = "WM(RightBracket,LCtrl | LShift | LAlt | LGui)" # Hyper+]
-hGrv   = "WM(Grave,       LCtrl | LShift | LAlt | LGui)" # Hyper+`
-hA     = "WM(A,           LCtrl | LShift | LAlt | LGui)"
-hB     = "WM(B,           LCtrl | LShift | LAlt | LGui)"
-hC     = "WM(C,           LCtrl | LShift | LAlt | LGui)"
-hD     = "WM(D,           LCtrl | LShift | LAlt | LGui)"
-hE     = "WM(E,           LCtrl | LShift | LAlt | LGui)"
-hF     = "WM(F,           LCtrl | LShift | LAlt | LGui)"
-hG     = "WM(G,           LCtrl | LShift | LAlt | LGui)"
-hH     = "WM(H,           LCtrl | LShift | LAlt | LGui)"
-hI     = "WM(I,           LCtrl | LShift | LAlt | LGui)"
-hJ     = "WM(J,           LCtrl | LShift | LAlt | LGui)"
-hK     = "WM(K,           LCtrl | LShift | LAlt | LGui)"
-hL     = "WM(L,           LCtrl | LShift | LAlt | LGui)"
-hM     = "WM(M,           LCtrl | LShift | LAlt | LGui)"
-hN     = "WM(N,           LCtrl | LShift | LAlt | LGui)"
-hO     = "WM(O,           LCtrl | LShift | LAlt | LGui)"
-hP     = "WM(P,           LCtrl | LShift | LAlt | LGui)"
-hR     = "WM(R,           LCtrl | LShift | LAlt | LGui)"
-hS     = "WM(S,           LCtrl | LShift | LAlt | LGui)"
-hT     = "WM(T,           LCtrl | LShift | LAlt | LGui)"
-hU     = "WM(U,           LCtrl | LShift | LAlt | LGui)"
-hV     = "WM(V,           LCtrl | LShift | LAlt | LGui)"
-hW     = "WM(W,           LCtrl | LShift | LAlt | LGui)"
-hX     = "WM(X,           LCtrl | LShift | LAlt | LGui)"
-hY     = "WM(Y,           LCtrl | LShift | LAlt | LGui)"
-hZ     = "WM(Z,           LCtrl | LShift | LAlt | LGui)"
+h1 = "WM(Kc1,        LCtrl | LShift | LAlt | LGui)"  # Hyper+1  (→ Hyper+!)
+h4 = "WM(Kc4,        LCtrl | LShift | LAlt | LGui)"  # Hyper+4  (→ Hyper+$)
+h5 = "WM(Kc5,        LCtrl | LShift | LAlt | LGui)"  # Hyper+5  (→ Hyper+%)
+h6 = "WM(Kc6,        LCtrl | LShift | LAlt | LGui)"  # Hyper+6  (→ Hyper+^)
+h7 = "WM(Kc7,        LCtrl | LShift | LAlt | LGui)"  # Hyper+7  (→ Hyper+&)
+h8 = "WM(Kc8,        LCtrl | LShift | LAlt | LGui)"  # Hyper+8  (→ Hyper+*)
+hLbr = "WM(LeftBracket, LCtrl | LShift | LAlt | LGui)" # Hyper+[
+hRbr = "WM(RightBracket,LCtrl | LShift | LAlt | LGui)" # Hyper+]
+hGrv = "WM(Grave,       LCtrl | LShift | LAlt | LGui)" # Hyper+`
+hA = "WM(A,           LCtrl | LShift | LAlt | LGui)"
+hB = "WM(B,           LCtrl | LShift | LAlt | LGui)"
+hC = "WM(C,           LCtrl | LShift | LAlt | LGui)"
+hD = "WM(D,           LCtrl | LShift | LAlt | LGui)"
+hE = "WM(E,           LCtrl | LShift | LAlt | LGui)"
+hF = "WM(F,           LCtrl | LShift | LAlt | LGui)"
+hG = "WM(G,           LCtrl | LShift | LAlt | LGui)"
+hH = "WM(H,           LCtrl | LShift | LAlt | LGui)"
+hI = "WM(I,           LCtrl | LShift | LAlt | LGui)"
+hJ = "WM(J,           LCtrl | LShift | LAlt | LGui)"
+hK = "WM(K,           LCtrl | LShift | LAlt | LGui)"
+hL = "WM(L,           LCtrl | LShift | LAlt | LGui)"
+hM = "WM(M,           LCtrl | LShift | LAlt | LGui)"
+hN = "WM(N,           LCtrl | LShift | LAlt | LGui)"
+hO = "WM(O,           LCtrl | LShift | LAlt | LGui)"
+hP = "WM(P,           LCtrl | LShift | LAlt | LGui)"
+hR = "WM(R,           LCtrl | LShift | LAlt | LGui)"
+hS = "WM(S,           LCtrl | LShift | LAlt | LGui)"
+hT = "WM(T,           LCtrl | LShift | LAlt | LGui)"
+hU = "WM(U,           LCtrl | LShift | LAlt | LGui)"
+hV = "WM(V,           LCtrl | LShift | LAlt | LGui)"
+hW = "WM(W,           LCtrl | LShift | LAlt | LGui)"
+hX = "WM(X,           LCtrl | LShift | LAlt | LGui)"
+hY = "WM(Y,           LCtrl | LShift | LAlt | LGui)"
+hZ = "WM(Z,           LCtrl | LShift | LAlt | LGui)"
 hComma = "WM(Comma,       LCtrl | LShift | LAlt | LGui)"
-hDot   = "WM(Dot,         LCtrl | LShift | LAlt | LGui)"
+hDot = "WM(Dot,         LCtrl | LShift | LAlt | LGui)"
 hSlash = "WM(Slash,       LCtrl | LShift | LAlt | LGui)"  # Hyper+/ (→ Hyper+? with shift in mods)
-hSemi  = "WM(Semicolon,   LCtrl | LShift | LAlt | LGui)"
-hEql   = "WM(Equal,       LCtrl | LShift | LAlt | LGui)"  # Hyper+= (→ Hyper++ with shift in mods)
-hMins  = "WM(Minus,       LCtrl | LShift | LAlt | LGui)"  # Hyper+- (→ Hyper+_ with shift in mods)
+hSemi = "WM(Semicolon,   LCtrl | LShift | LAlt | LGui)"
+hEql = "WM(Equal,       LCtrl | LShift | LAlt | LGui)"  # Hyper+= (→ Hyper++ with shift in mods)
+hMins = "WM(Minus,       LCtrl | LShift | LAlt | LGui)"  # Hyper+- (→ Hyper+_ with shift in mods)
 
 # ── LAlt combinations (SYMNUM layer) ────────────────────────────────────────
-aT   = "WM(T,   LAlt)"
-aZ   = "WM(Z,   LAlt)"
-aQ   = "WM(Q,   LAlt)"
-aD   = "WM(D,   LAlt)"
-aW   = "WM(W,   LAlt)"
-aX   = "WM(X,   LAlt)"
-aY   = "WM(Y,   LAlt)"
-aI   = "WM(I,   LAlt)"
-aO   = "WM(O,   LAlt)"
-aH   = "WM(H,   LAlt)"
-aJ   = "WM(J,   LAlt)"
-aK   = "WM(K,   LAlt)"
-aA   = "WM(A,   LAlt)"
-aS   = "WM(S,   LAlt)"
-aF   = "WM(F,   LAlt)"
-aM   = "WM(M,   LAlt)"
-aC   = "WM(C,   LAlt)"
-aV   = "WM(V,   LAlt)"
-aN   = "WM(N,   LAlt)"
-aN1  = "WM(Kc1, LAlt)"
-aN2  = "WM(Kc2, LAlt)"
-aN3  = "WM(Kc3, LAlt)"
-aN4  = "WM(Kc4, LAlt)"
-aN5  = "WM(Kc5, LAlt)"
-aN6  = "WM(Kc6, LAlt)"
+aT = "WM(T,   LAlt)"
+aZ = "WM(Z,   LAlt)"
+aQ = "WM(Q,   LAlt)"
+aD = "WM(D,   LAlt)"
+aW = "WM(W,   LAlt)"
+aX = "WM(X,   LAlt)"
+aY = "WM(Y,   LAlt)"
+aI = "WM(I,   LAlt)"
+aO = "WM(O,   LAlt)"
+aH = "WM(H,   LAlt)"
+aJ = "WM(J,   LAlt)"
+aK = "WM(K,   LAlt)"
+aA = "WM(A,   LAlt)"
+aS = "WM(S,   LAlt)"
+aF = "WM(F,   LAlt)"
+aM = "WM(M,   LAlt)"
+aC = "WM(C,   LAlt)"
+aV = "WM(V,   LAlt)"
+aN = "WM(N,   LAlt)"
+aN1 = "WM(Kc1, LAlt)"
+aN2 = "WM(Kc2, LAlt)"
+aN3 = "WM(Kc3, LAlt)"
+aN4 = "WM(Kc4, LAlt)"
+aN5 = "WM(Kc5, LAlt)"
+aN6 = "WM(Kc6, LAlt)"
 
 # ── Misc shortcuts ───────────────────────────────────────────────────────────
 lctab = "WM(Tab, LCtrl)"   # Ctrl+Tab  (NAV layer)
-lacv  = "WM(V,   LAlt)"    # Alt+V     (NAV layer — same as @aV, kept for clarity)
-lacc  = "WM(C,   LAlt)"    # Alt+C     (NAV layer — same as @aC)
+lacv = "WM(V,   LAlt)"    # Alt+V     (NAV layer — same as @aV, kept for clarity)
+lacc = "WM(C,   LAlt)"    # Alt+C     (NAV layer — same as @aC)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Layers  (41 keys each, order = matrix_map row by row)
@@ -283,13 +279,13 @@ lacc  = "WM(C,   LAlt)"    # Alt+C     (NAV layer — same as @aC)
 [[layer]]
 name = "BASE"
 keys = """
-Escape           Q                W                E                R                T
-Y                U                I                O                P                Backspace
-Tab              MT(A,LGui,tp200) MT(S,LAlt,tp200) MT(D,LCtrl,tp200) MT(F,LShift,tp200) G
-H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
-MO(4)            Z                X                C                V                B
-N                M                Comma            Dot              Slash            MO(4)
-LGui            Space            MO(1)            MO(2)            Enter
+Escape           Q                W                E                R                  T
+Y                U                I                O                P                  Backspace
+Tab              MT(A,LGui)       MT(S,LAlt)       MT(D,LCtrl)      MT(F,LShift)       G
+H                MT(J,RShift)     MT(K,RCtrl)      MT(L,RAlt)       MT(Semicolon,RGui) Quote
+MO(4)            Z                X                C                V                  B
+N                M                Comma            Dot              Slash              MO(4)
+LT(5, LGui)      Space            MO(1)            MO(2)            Enter
 """
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -395,7 +391,7 @@ keys = """
 Escape           T                Q                W                E                R
 Y                U                I                O                P                TO(0)
 Tab              LShift           A                S                D                F
-H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+H                MT(J,RShift) MT(K,RCtrl) MT(L,RAlt) MT(Semicolon,RGui) Quote
 Z                B                X                C                V                B
 N                M                Comma            Dot              Slash            MO(4)
 MO(8)            Space            MO(7)            MO(2)            Enter
@@ -410,7 +406,7 @@ keys = """
 P                Kc1              Kc7              _                Kc8              Kc4
 Y                U                I                O                P                TO(0)
 M                Kc2              _                _                _                Kc5
-H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+H                MT(J,RShift) MT(K,RCtrl) MT(L,RAlt) MT(Semicolon,RGui) Quote
 N                Kc3              Kc0              I                Kc9              Kc6
 N                M                Comma            Dot              Slash            MO(4)
 _                _                _                MO(2)            Enter
@@ -425,7 +421,7 @@ keys = """
 F1               Y                U                I                O                P
 Y                U                I                O                P                TO(0)
 F2               H                J                L                Semicolon        Quote
-H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
+H                MT(J,RShift) MT(K,RCtrl) MT(L,RAlt) MT(Semicolon,RGui) Quote
 F3               N                M                Comma            Dot              Slash
 N                M                Comma            Dot              Slash            MO(4)
 _                _                _                MO(2)            Enter
