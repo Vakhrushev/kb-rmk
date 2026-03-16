@@ -105,6 +105,7 @@ col_offset = 0
 matrix_type = "normal"
 row_pins    = ["P1_15", "P0_24", "P0_22", "P1_06"]
 col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
+row2col     = true
 
 [[split.peripheral]]
 rows       = 4
@@ -116,6 +117,7 @@ col_offset = 6
 matrix_type = "normal"
 row_pins    = ["P1_15", "P0_24", "P0_22", "P1_06"]
 col_pins    = ["P0_02", "P0_29", "P0_09", "P1_00", "P0_11", "P1_04"]
+row2col     = true
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PMW3610 trackball (right / peripheral half)
