@@ -289,7 +289,7 @@ Tab              MT(A,LGui,tp200) MT(S,LAlt,tp200) MT(D,LCtrl,tp200) MT(F,LShift
 H                MT(J,RShift,tp200) MT(K,RCtrl,tp200) MT(L,RAlt,tp200) MT(Semicolon,RGui,tp200) Quote
 MO(4)            Z                X                C                V                B
 N                M                Comma            Dot              Slash            MO(4)
-TD(0)            Space            MO(1)            MO(2)            Enter
+LGui            Space            MO(1)            MO(2)            Enter
 """
 
 # ───────────────────────────────────────────────────────────────────────────
