@@ -11,6 +11,7 @@ generate:
 	$(RMKIT) create \
 		--keyboard-toml-path keyboard.toml \
 		--vial-json-path vial.json \
+		--version main \
 		--target-dir $(BUILD_DIR)
 
 ## Step 2 — compile firmware
