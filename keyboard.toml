@@ -27,6 +27,7 @@
 
 [keyboard]
 name = "Charybdis Mini v2"
+product_name = "Charybdis Mini v2"
 vendor_id = 0x4c4b
 product_id = 0x6060
 manufacturer = "Custom"
