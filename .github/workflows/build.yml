@@ -3,7 +3,12 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "**"
+      - "keyboard.toml"
+      - "vial.json"
+
+concurrency:
+  group: build
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -11,3 +16,4 @@ jobs:
     with:
       keyboard_toml_path: "keyboard.toml"
       vial_json_path: "vial.json"
+      rmk_version: "main"
