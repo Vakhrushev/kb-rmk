@@ -151,9 +151,6 @@ row2col = true
 # either version — see NOTE 4 above.
 # ═══════════════════════════════════════════════════════════════════════════
 
-# rmk-config 0.6.0-compatible form (generic pointing device via SPI):
-[[input_device.pointing]]
-interface = { Spi = { instance = "SPIM0", sck = "P1_13", mosi = "P0_10", miso = "P0_10", cs = "P0_20", cpi = 600 } }
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Behaviors
