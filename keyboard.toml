@@ -26,19 +26,29 @@
 # ═══════════════════════════════════════════════════════════════════════════
 
 [keyboard]
-name = "Charybdis Mini v2"
-product_name = "Charybdis Mini v2"
+name = "rmk"
+product_name = "rmk"
 vendor_id = 0x4c4b
 product_id = 0x6060
 manufacturer = "Custom"
-chip = "nrf52840"
+chip = "nrf52840" #or this or board
+#board = "nice!nano_v2"
+
+[host]
+unlock_keys = [[0, 0], [0, 1]]
 
 # ═══════════════════════════════════════════════════════════════════════════
 # BLE / wireless
 # ═══════════════════════════════════════════════════════════════════════════
-
 [ble]
+# Whether to enable BLE feature
 enabled = true
+
+[storage]
+# Clear all storage data on boot, including keymap, BLE bonds, etc
+clear_storage = true
+# Clear only layout/keymap data, preserve BLE bonds
+clear_layout = true
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Layout
@@ -63,7 +73,7 @@ enabled = true
 [layout]
 rows = 4
 cols = 12
-layers = 8
+layers = 9
 matrix_map = """
 (0,0,L)  (0,1,L)  (0,2,L)  (0,3,L)  (0,4,L)  (0,5,L)   (0,11,R) (0,10,R) (0,9,R)  (0,8,R)  (0,7,R)  (0,6,R)
 (1,0,L)  (1,1,L)  (1,2,L)  (1,3,L)  (1,4,L)  (1,5,L)   (1,11,R) (1,10,R) (1,9,R)  (1,8,R)  (1,7,R)  (1,6,R)
@@ -152,16 +162,35 @@ row2col = true
 # either version — see NOTE 4 above.
 # ═══════════════════════════════════════════════════════════════════════════
 
+[[split.peripheral.input_device.pmw3610]]
+name = "trackball0"
+
+spi.instance = "bitbang0"
+spi.sck = "P1_13"
+spi.mosi = "P0_10"
+spi.miso = "P0_10"
+spi.cs = "P0_20"
+
+report_hz = 500
+
+motion = "P1_11"
+
+force_awake = false
+smart_mode = true
+cpi = 600
+invert_x = true
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Behaviors
 # ═══════════════════════════════════════════════════════════════════════════
 
-
 [behavior.morse]
-permissive_hold = true
-prior_idle_time = "60ms"
-hold_timeout = "250ms"
+enable_flow_tap = true
+prior_idle_time = "120ms"
+hold_on_other_press = false
+
+[behavior.morse.profiles]
+HRM = { unilateral_tap = true, permissive_hold = true, hold_timeout = "170ms", gap_timeout = "200ms" }
 
 [behavior.combo]
 timeout = "50ms"
@@ -178,13 +207,51 @@ combos = [
 
 [aliases]
 
-# ── Hyper = LCtrl | LShift | LAlt | LGui  (used in NAV row 2) ───────────────
+# ── Hyper = LCtrl | LShift | LAlt | LGui ────────────────────────────────────
+# Numbers / symbols (NAV row 2)
+h1   = "WM(Kc1,         LCtrl | LShift | LAlt | LGui)"  # Hyper+1 (→ Hyper+!)
+h4   = "WM(Kc4,         LCtrl | LShift | LAlt | LGui)"  # Hyper+4 (→ Hyper+$)
+h5   = "WM(Kc5,         LCtrl | LShift | LAlt | LGui)"  # Hyper+5 (→ Hyper+%)
 h6   = "WM(Kc6,         LCtrl | LShift | LAlt | LGui)"  # Hyper+^
 h7   = "WM(Kc7,         LCtrl | LShift | LAlt | LGui)"  # Hyper+&
 h8   = "WM(Kc8,         LCtrl | LShift | LAlt | LGui)"  # Hyper+*
 hLbr = "WM(LeftBracket, LCtrl | LShift | LAlt | LGui)"  # Hyper+[
 hRbr = "WM(RightBracket,LCtrl | LShift | LAlt | LGui)"  # Hyper+]
 hGrv = "WM(Grave,       LCtrl | LShift | LAlt | LGui)"  # Hyper+`
+# Letters (SUPER layer)
+hA = "WM(A,           LCtrl | LShift | LAlt | LGui)"
+hB = "WM(B,           LCtrl | LShift | LAlt | LGui)"
+hC = "WM(C,           LCtrl | LShift | LAlt | LGui)"
+hD = "WM(D,           LCtrl | LShift | LAlt | LGui)"
+hE = "WM(E,           LCtrl | LShift | LAlt | LGui)"
+hF = "WM(F,           LCtrl | LShift | LAlt | LGui)"
+hG = "WM(G,           LCtrl | LShift | LAlt | LGui)"
+hH = "WM(H,           LCtrl | LShift | LAlt | LGui)"
+hI = "WM(I,           LCtrl | LShift | LAlt | LGui)"
+hJ = "WM(J,           LCtrl | LShift | LAlt | LGui)"
+hK = "WM(K,           LCtrl | LShift | LAlt | LGui)"
+hL = "WM(L,           LCtrl | LShift | LAlt | LGui)"
+hM = "WM(M,           LCtrl | LShift | LAlt | LGui)"
+hN = "WM(N,           LCtrl | LShift | LAlt | LGui)"
+hO = "WM(O,           LCtrl | LShift | LAlt | LGui)"
+hP = "WM(P,           LCtrl | LShift | LAlt | LGui)"
+hR = "WM(R,           LCtrl | LShift | LAlt | LGui)"
+hS = "WM(S,           LCtrl | LShift | LAlt | LGui)"
+hT = "WM(T,           LCtrl | LShift | LAlt | LGui)"
+hU = "WM(U,           LCtrl | LShift | LAlt | LGui)"
+hV = "WM(V,           LCtrl | LShift | LAlt | LGui)"
+hW = "WM(W,           LCtrl | LShift | LAlt | LGui)"
+hX = "WM(X,           LCtrl | LShift | LAlt | LGui)"
+hY = "WM(Y,           LCtrl | LShift | LAlt | LGui)"
+hZ = "WM(Z,           LCtrl | LShift | LAlt | LGui)"
+# Punctuation (SUPER layer)
+hComma = "WM(Comma,       LCtrl | LShift | LAlt | LGui)"
+hDot   = "WM(Dot,         LCtrl | LShift | LAlt | LGui)"
+hSlash = "WM(Slash,       LCtrl | LShift | LAlt | LGui)"  # Hyper+/ (→ Hyper+?)
+hSemi  = "WM(Semicolon,   LCtrl | LShift | LAlt | LGui)"
+hEql   = "WM(Equal,       LCtrl | LShift | LAlt | LGui)"  # Hyper+= (→ Hyper++)
+hMins  = "WM(Minus,       LCtrl | LShift | LAlt | LGui)"  # Hyper+- (→ Hyper+_)
+
 
 # ── LAlt combinations (SYMNUM layer) ────────────────────────────────────────
 aT = "WM(T,   LAlt)"
@@ -230,11 +297,11 @@ name = "BASE"
 keys = """
 Escape           Q                W                E                R                  T
 Y                U                I                O                P                  Backspace
-Tab              MT(A,LGui)       MT(S,LAlt)       MT(D,LCtrl)      MT(F,LShift)       G
-H                MT(J,RShift)     MT(K,RCtrl)      MT(L,RAlt)       MT(Semicolon,RGui) Quote
+Tab              MT(A,LGui,HRM)       MT(S,LAlt,HRM)       MT(D,LCtrl,HRM)      MT(F,LShift,HRM)       G
+H                MT(J,RShift,HRM)     MT(K,RCtrl,HRM)      MT(L,RAlt,HRM)       MT(Semicolon,RGui,HRM) Quote
 MO(4)            Z                X                C                V                  B
 N                M                Comma            Dot              Slash              MO(4)
-LGui             Space            MO(1)            MO(2)            Enter
+LGui            Space            MO(1)            MO(2)            Enter
 """
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -276,17 +343,19 @@ _                _                MO(3)            _                _
 # ───────────────────────────────────────────────────────────────────────────
 # Layer 3 — FUN
 # Bluetooth profiles, output selection, bootloader.
-# User0–User4 = BT profile 0–4 (Vial custom keycodes — see NOTE 2).
-# ClearEeprom  ≈ bt BT_CLR  (clears stored BT bonds / EEPROM).
-# OutputBluetooth ≈ out OUT_TOG  (force BLE output; use OutputUsb to revert).
+# With 3 BLE profiles (default):
+#   User0–User2 = BT profile 0–2
+#   User3 / User4 = next / previous profile
+#   User5 = clear current profile bond (≈ ZMK BT_CLR)
+#   User6 = toggle USB/BLE output      (≈ ZMK OUT_TOG)
 # ───────────────────────────────────────────────────────────────────────────
 [[layer]]
 name = "FUN"
 keys = """
 _                _                _                _                _                SystemPower
-User0            User1            User2            User3            User4            ClearEeprom
+User0            User1            User2            User3            User4            User5
 _                _                _                _                _                _
-OutputBluetooth  _                _                _                _                _
+User6            _                _                _                _                _
 Bootloader       _                _                _                _                _
 _                _                _                _                _                Bootloader
 _                _                _                _                _
@@ -302,7 +371,7 @@ name = "SCROLL"
 keys = """
 F1               F2               F3               F4               F5               F6
 F7               F8               F9               F10              F11              F12
-TO(5)            _                _                _                _                _
+TO(6)            _                _                _                _                _
 _                _                _                _                MediaPlayPause   AudioVolUp
 _                _                _                _                _                _
 _                MouseBtn1        MouseBtn2        _                AudioMute        AudioVolDown
@@ -310,7 +379,23 @@ _                _                _                _                _
 """
 
 # ───────────────────────────────────────────────────────────────────────────
-# Layer 5 — GAME
+# Layer 5 — SUPER
+# Every key sends Ctrl+Shift+Alt+GUI (Hyper) + the base key.
+# ───────────────────────────────────────────────────────────────────────────
+[[layer]]
+name = "SUPER"
+keys = """
+@h1              @h4              @hW              @hE              @hR              @hT
+@hY              @hU              @hI              @hO              @hP              @hSlash
+@h5              @hA              @hS              @hD              @hF              @hG
+@hH              @hJ              @hK              @hL              @hSemi           @hEql
+@hMins           @hZ              @hX              @hC              @hV              @hB
+@hN              @hM              @hComma          @hDot            @hSlash          @hMins
+_                _                _                _                _
+"""
+
+# ───────────────────────────────────────────────────────────────────────────
+# Layer 6 — GAME
 # No home-row mods on the left hand; dedicated LShift on row 1 col 1.
 # TO(0) returns to BASE.
 # ───────────────────────────────────────────────────────────────────────────
@@ -320,10 +405,10 @@ keys = """
 Escape           T                Q                W                E                R
 Y                U                I                O                P                TO(0)
 Tab              LShift           A                S                D                F
-H                MT(J,RShift) MT(K,RCtrl) MT(L,RAlt) MT(Semicolon,RGui) Quote
+H                MT(J,RShift,HRM) MT(K,RCtrl,HRM) MT(L,RAlt,HRM) MT(Semicolon,RGui,HRM) Quote
 Z                B                X                C                V                B
 N                M                Comma            Dot              Slash            MO(4)
-MO(7)            Space            MO(6)            MO(2)            Enter
+MO(8)            Space            MO(7)            MO(2)            Enter
 """
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -335,7 +420,7 @@ keys = """
 P                Kc1              Kc7              _                Kc8              Kc4
 Y                U                I                O                P                TO(0)
 M                Kc2              _                _                _                Kc5
-H                MT(J,RShift) MT(K,RCtrl) MT(L,RAlt) MT(Semicolon,RGui) Quote
+H                MT(J,RShift,HRM) MT(K,RCtrl,HRM) MT(L,RAlt,HRM) MT(Semicolon,RGui,HRM) Quote
 N                Kc3              Kc0              I                Kc9              Kc6
 N                M                Comma            Dot              Slash            MO(4)
 _                _                _                MO(2)            Enter
@@ -350,7 +435,7 @@ keys = """
 F1               Y                U                I                O                P
 Y                U                I                O                P                TO(0)
 F2               H                J                L                Semicolon        Quote
-H                MT(J,RShift) MT(K,RCtrl) MT(L,RAlt) MT(Semicolon,RGui) Quote
+H                MT(J,RShift,HRM) MT(K,RCtrl,HRM) MT(L,RAlt,HRM) MT(Semicolon,RGui,HRM) Quote
 F3               N                M                Comma            Dot              Slash
 N                M                Comma            Dot              Slash            MO(4)
 _                _                _                MO(2)            Enter
