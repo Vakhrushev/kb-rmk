@@ -26,8 +26,8 @@
 # ═══════════════════════════════════════════════════════════════════════════
 
 [keyboard]
-name = "rmk"
-product_name = "rmk"
+name = "rmk2"
+product_name = "rmk2"
 vendor_id = 0x4c4b
 product_id = 0x6060
 manufacturer = "Custom"
@@ -46,9 +46,9 @@ enabled = true
 
 [storage]
 # Clear all storage data on boot, including keymap, BLE bonds, etc
-clear_storage = true
+clear_storage = false
 # Clear only layout/keymap data, preserve BLE bonds
-clear_layout = true
+clear_layout = false
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Layout
@@ -170,8 +170,6 @@ spi.sck = "P1_13"
 spi.mosi = "P0_10"
 spi.miso = "P0_10"
 spi.cs = "P0_20"
-
-report_hz = 500
 
 motion = "P1_11"
 
