@@ -1,4 +1,6 @@
 .claude
-build
+.cargo
 .DS_Store
+target
 *.uf2
+*.hex
